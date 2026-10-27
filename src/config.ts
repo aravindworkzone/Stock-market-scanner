@@ -14,6 +14,11 @@ const configSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(60),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
+
+  ANGELONE_API_KEY: z.string().trim().min(1, "ANGELONE_API_KEY is required"),
+  ANGELONE_CLIENT_CODE: z.string().trim().min(1, "ANGELONE_CLIENT_CODE is required"),
+  ANGELONE_PIN: z.string().min(1, "ANGELONE_PIN is required"),
+  ANGELONE_TOTP_SECRET: z.string().trim().min(1, "ANGELONE_TOTP_SECRET is required"),
 });
 
 const result = configSchema.safeParse(process.env);

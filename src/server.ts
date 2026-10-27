@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { searchInstruments } from "./instruments/instrument-repository.js";
+import getHistoricalCandles from "./angelone/historical-candles.js";
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -44,6 +45,52 @@ export function createMcpServer(): McpServer {
           {
             type: "text",
             text: JSON.stringify(instruments, null, 2),
+          },
+        ],
+      };
+    },
+  );
+
+  server.registerTool(
+    "get_historical_candles",
+    {
+      description:
+        "Retrieve historical OHLCV candles from Angel One SmartAPI. Read-only; does not place trades.",
+      inputSchema: {
+        exchange: z.enum(["NSE", "BSE"])
+          .describe("Exchange: NSE or BSE"),
+        symboltoken: z.string().trim().min(1)
+          .describe("Angel One instrument token, e.g. 1333"),
+        interval: z.enum([
+          "ONE_MINUTE",
+          "THREE_MINUTE",
+          "FIVE_MINUTE",
+          "TEN_MINUTE",
+          "FIFTEEN_MINUTE",
+          "THIRTY_MINUTE",
+          "ONE_HOUR",
+          "ONE_DAY",
+        ]).describe("Historical candle interval"),
+        fromdate: z.string().min(1)
+          .describe("Start date/time in Angel One API format"),
+        todate: z.string().min(1)
+          .describe("End date/time in Angel One API format"),
+      },
+    },
+    async ({ exchange, symboltoken, interval, fromdate, todate }) => {
+      const result = await getHistoricalCandles(
+        exchange,
+        symboltoken,
+        interval,
+        fromdate,
+        todate,
+      );
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
           },
         ],
       };
