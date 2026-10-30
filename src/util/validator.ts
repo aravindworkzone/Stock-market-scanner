@@ -10,7 +10,3 @@ export const InstrumentRecordSchema = z.object({
 export const InstrumentMasterSchema = z.array(
     InstrumentRecordSchema,
 );
-
-export type InstrumentRecord = z.infer<
-    typeof InstrumentRecordSchema
->;

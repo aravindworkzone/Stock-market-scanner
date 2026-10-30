@@ -1,7 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { searchInstruments } from "./instruments/instrument-repository.js";
+import searchInstruments from "./instruments/instrument-search.js";
 import getHistoricalCandles from "./angelone/historical-candles.js";
+import indexStock from "./indices/index-stock.service.js";
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -38,8 +39,7 @@ export function createMcpServer(): McpServer {
       },
     },
     async ({ query, exchange }) => {
-      const instruments = await searchInstruments(query, exchange, 10);
-
+      const instruments = await searchInstruments(query, exchange);
       return {
         content: [
           {
@@ -91,6 +91,39 @@ export function createMcpServer(): McpServer {
           {
             type: "text",
             text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    },
+  );
+
+  server.registerTool(
+    "get_index_stocks",
+    {
+      description:
+        "Retrieve all matched Angel One instruments belonging to a specified NSE index. Supports NIFTY 50 and NIFTY 500. Returns company name, trading symbol, exchange series, ISIN, and Angel One symbol token. Read-only; does not place trades.",
+
+      inputSchema: {
+        indexName: z.enum(["NIFTY 50", "NIFTY 500"])
+          .describe("NSE index name: NIFTY 50 or NIFTY 500"),
+      },
+    },
+    async ({ indexName }) => {
+      const result = await indexStock(indexName);
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                index: indexName,
+                totalStocks: result.length,
+                stocks: result,
+              },
+              null,
+              2,
+            ),
           },
         ],
       };

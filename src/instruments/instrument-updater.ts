@@ -5,7 +5,7 @@ import downloadInstrumentMaster from './instrument-downloader.js';
 import { logger } from '../logger.js';
 import { AppError, toAppError } from '../errors.js';
 import { InstrumentMasterSchema } from '../util/validator.js';
-import { reloadInstrumentMaster } from './instrument-repository.js';
+import { reloadInstrumentMaster } from './instrument-load.js';
 
 const DATA_DIRECTORY = path.resolve(process.cwd(), 'data', 'instruments');
 

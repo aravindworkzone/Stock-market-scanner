@@ -1,4 +1,4 @@
-import getAngelOneClient from "./session-manager.js";
+import { getAngelOneClient, handleSession } from "./session-manager.js";
 import { toAppError, AppError } from "../errors.js";
 import { logger } from "../logger.js";
 import type { AngelOneCandle, AngelOneApiResponse } from "../types/angelone.js";
@@ -18,17 +18,20 @@ export default async function getHistoricalCandles(
       );
     }
 
-    const smartApi = await getAngelOneClient();
+    return handleSession(async () => {
+      const smartApi = await getAngelOneClient();
 
-    const historicalCandles = await smartApi.getCandleData({
-      exchange,
-      symboltoken,
-      interval,
-      fromdate,
-      todate,
+      const historicalCandles = await smartApi.getCandleData({
+        exchange,
+        symboltoken,
+        interval,
+        fromdate,
+        todate,
+      });
+
+      return historicalCandles;
     });
 
-    return historicalCandles;
   } catch (error: unknown) {
     const candleError = toAppError(error);
     logger.error(candleError.message, candleError.code);
