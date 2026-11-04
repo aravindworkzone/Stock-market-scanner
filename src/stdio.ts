@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config({
   path: path.resolve(
-    "C:/Users/77529/Desktop/manage/s-market_scanner/.env",
+    "C:\\Users\\arusa\\OneDrive\\Desktop\\My Bussiness\\Stock-market-scanner\\.env",
   ),
 });
 

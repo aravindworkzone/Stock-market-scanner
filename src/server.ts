@@ -3,6 +3,7 @@ import { z } from "zod";
 import searchInstruments from "./instruments/instrument-search.js";
 import getHistoricalCandles from "./angelone/historical-candles.js";
 import indexStock from "./indices/index-stock.service.js";
+import sma from './calculator/indiactors/SMA.js';
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -124,6 +125,46 @@ export function createMcpServer(): McpServer {
               null,
               2,
             ),
+          },
+        ],
+      };
+    },
+  );
+
+  server.registerTool(
+    "get_calculator_indicator_sma",
+    {
+      description: "Calaculate SMA value",
+
+    inputSchema: {
+      exchange: z.enum(["NSE", "BSE"]),
+
+      symboltoken: z.string().trim().min(1),
+
+      interval: z.enum([
+        "ONE_MINUTE",
+        "THREE_MINUTE",
+        "FIVE_MINUTE",
+        "TEN_MINUTE",
+        "FIFTEEN_MINUTE",
+        "THIRTY_MINUTE",
+        "ONE_HOUR",
+        "ONE_DAY",
+      ]),
+
+      fromdate: z.string().min(1),
+      todate: z.string().min(1),
+      period: z.number().optional().describe("Period for SMA calculation. If not provided, defaults to the length of the data."),
+    },
+    },
+     async ({ exchange, symboltoken, interval, fromdate, todate, period }) => {
+      const result = await sma(exchange, symboltoken, interval, fromdate, todate, period);
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2)
           },
         ],
       };
