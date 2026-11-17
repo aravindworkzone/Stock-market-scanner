@@ -1,38 +1,148 @@
-import {AngelOneCandle} from '../../types/angelone.js';
+
+import { AngelOneCandle } from '../../types/angelone.js';
 import { AppError, toAppError } from '../../errors.js';
 import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { Direction } from '../../types/indices.js';
+import fromToDate from '../../util/fromToDate.js';
 
-export default async function SMA(exchange: string, symboltoken: string, interval: string, fromdate: string, todate: string, period?: number) {
+export async function SMA(
+    exchange: string,
+    symboltoken: string,
+    interval: string,
+    period: number,
+    date: string,
+    direction: Direction
+) {
     try {
-        const Candle = await getHistoricalCandles(exchange, symboltoken, interval, fromdate, todate);
+        if (!date) {
+            throw new AppError('VALIDATION_ERROR', 'Date is required.');
+        }
 
-        if (Candle.data === null || Candle.data === undefined) {
-            throw new AppError('NO_DATA', 'No candle data available for the given parameters.');
+        if (!exchange || !symboltoken || !interval) {
+            throw new AppError(
+                'VALIDATION_ERROR',
+                'Exchange, symbol token and interval are required.'
+            );
+        }
+
+        if (!Number.isSafeInteger(period) || period <= 0) {
+            throw new AppError(
+                'VALIDATION_ERROR',
+                'Period must be a positive safe integer.'
+            );
+        }
+
+        if (!['forward', 'backward'].includes(direction)) {
+            throw new AppError('VALIDATION_ERROR', 'Invalid direction.');
+        }
+
+        const parsedDate = new Date(`${date}T00:00:00+05:30`);
+
+        if (
+            !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+            Number.isNaN(parsedDate.getTime()) ||
+            parsedDate.toISOString().slice(0, 10) !== date
+        ) {
+            throw new AppError('VALIDATION_ERROR', 'Invalid date format. Expected YYYY-MM-DD.');
+        }
+
+        const tradingDays = fromToDate(date, direction, period);
+
+        const Candle = await getHistoricalCandles(
+            exchange,
+            symboltoken,
+            interval,
+            tradingDays.fromdate,
+            tradingDays.todate
+        );
+
+        if (!Candle || Candle.status !== true) {
+            throw new AppError(
+                'BROKER_API_ERROR',
+                `Angel One failed: status=${Candle?.status}, code=${Candle?.errorcode}, msg=${Candle?.message}`
+            );
+        }
+
+        if (!Array.isArray(Candle.data) || Candle.data.length === 0) {
+            throw new AppError(
+                'NO_DATA',
+                'No candle data available for the given parameters.'
+            );
         }
 
         const data: AngelOneCandle[] = Candle.data;
 
-        const periodValue = period || data.length;
-        let sum = 0;
-        const SMAValue = data.map((c, i) => {
-            sum += c[4];
-            if (i >= periodValue) sum -= data[i - periodValue][4];
-            return { date: c[0], sma: i < periodValue - 1 ? null : Math.round(sum / periodValue * 100) / 100 };
-        });
-        const latestSMA = SMAValue[SMAValue.length - 1].sma;
-
-        const result = {
-            "indicator": "SMA",
-            "period": periodValue,
-            "source": "close",
-            "daily sma": SMAValue,
-            "latest sma": latestSMA,
-            "timestamp": data[data.length - 1][0]
-        }
+        const result = getSMA(data, period);
 
         return result;
+
     } catch (error) {
-        const candleError = toAppError(error);
-        throw candleError;
+        throw toAppError(error);
     }
+}
+
+
+export function getSMA(Candle: AngelOneCandle[], period: number) {
+
+    if (!Number.isSafeInteger(period) || period <= 0) {
+        throw new AppError(
+            'VALIDATION_ERROR',
+            'Period must be a positive safe integer.'
+        );
+    }
+
+    if (!Array.isArray(Candle) || Candle.length < period) {
+        throw new AppError(
+            'NO_DATA',
+            `Insufficient candles. Required: ${period}, Available: ${Candle?.length ?? 0}.`
+        );
+    }
+
+    const closes = Candle.map((candle) => {
+        if (!Array.isArray(candle) || candle.length < 5) {
+            throw new AppError(
+                'VALIDATION_ERROR',
+                'Invalid candle structure.'
+            );
+        }
+
+        const close = Number(candle[4]);
+
+        if (!Number.isFinite(close) || close <= 0) {
+            throw new AppError(
+                'VALIDATION_ERROR',
+                'Invalid candle close price.'
+            );
+        }
+
+        return close;
+    });
+
+    for (let i = 1; i < Candle.length; i++) {
+        const previousTime = new Date(Candle[i - 1][0]).getTime();
+        const currentTime = new Date(Candle[i][0]).getTime();
+
+        if (
+            !Number.isFinite(previousTime) ||
+            !Number.isFinite(currentTime) ||
+            currentTime <= previousTime
+        ) {
+            throw new AppError(
+                'VALIDATION_ERROR',
+                'Candles must be in valid chronological ascending order.'
+            );
+        }
+    }
+
+    const latestCloses = closes.slice(-period);
+
+    const latestSMA = latestCloses.reduce((sum, close) => sum + close, 0) / period;
+
+    return {
+        indicator: 'SMA',
+        period,
+        source: 'close',
+        'latest sma': Math.round(latestSMA * 100) / 100,
+        timestamp: Candle[Candle.length - 1][0]
+    };
 }

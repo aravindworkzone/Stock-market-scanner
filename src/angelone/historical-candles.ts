@@ -18,6 +18,22 @@ export default async function getHistoricalCandles(
       );
     }
 
+    if(new Date(fromdate) > new Date(todate)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        "fromdate cannot be later than todate.",
+      );
+    }
+
+    const currentDate = new Date();
+
+    if(new Date(todate) > currentDate) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        "todate cannot be later than the current date.",
+      );
+    }
+
     return handleSession(async () => {
       const smartApi = await getAngelOneClient();
 
@@ -28,6 +44,13 @@ export default async function getHistoricalCandles(
         fromdate,
         todate,
       });
+
+      if(historicalCandles.status === 403) {
+        throw new AppError(
+          "RATE_LIMIT_ERROR",
+          'Angel One API rate limit exceeded. Please try again later.'
+        );
+      }
 
       return historicalCandles;
     });

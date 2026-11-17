@@ -8,7 +8,7 @@ export type AngelOneCandle = [
 ];
 
 export interface AngelOneApiResponse<T> {
-  status: boolean;
+  status: boolean | number;
   message?: string;
   errorcode?: string;
   data?: T | null;

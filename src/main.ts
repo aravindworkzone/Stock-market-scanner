@@ -1,7 +1,7 @@
 import { createServer, type ServerResponse } from "node:http";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createMcpServer } from "./server.js";
-import { config } from "./config.js";
+import { config } from "./config/config.js";
 import { logger } from "./logger.js";
 import { toAppError } from "./errors.js";
 import { isAuthorized, rateLimit } from "./auth.js";

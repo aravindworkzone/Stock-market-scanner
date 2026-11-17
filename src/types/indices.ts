@@ -15,3 +15,5 @@ export interface IndexConstituent {
   series: string;
   isin: string;
 }
+
+export type Direction = 'forward' | 'backward';
