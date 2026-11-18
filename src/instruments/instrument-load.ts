@@ -5,7 +5,7 @@ import { type InstrumentRecord } from '../types/instruments.js';
 import { AppError } from '../errors.js';
 
 const INSTRUMENT_MASTER_FILE = path.resolve(
-  'C:/Users/77529/Desktop/manage/s-market_scanner/data/instruments/OpenAPIScripMaster.json',
+  'C:\\Users\\arusa\\OneDrive\\Desktop\\My Bussiness\\Stock-market-scanner\\data\\instruments\\OpenAPIScripMaster.json',
 );
 let instrumentCache: InstrumentRecord[] | null = null;
 

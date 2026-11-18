@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { config } from "./config/config.js";
 import type { AppErrorCode } from "./errors.js";
 
 type LogLevel = "debug" | "info" | "warn" | "error";

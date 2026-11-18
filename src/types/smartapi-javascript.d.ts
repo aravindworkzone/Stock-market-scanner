@@ -23,13 +23,37 @@ declare module "smartapi-javascript" {
       fromdate: string;
       todate: string;
     }): Promise<{
-      status: boolean;
+      status: boolean | number;
       message?: string;
       errorcode?: string;
       data?: import("../types/angelone.js").AngelOneCandle[] | null;
     }>;
 
     getProfile(): Promise<{
+      status: boolean;
+      message?: string;
+      data?: unknown;
+    }>;
+
+    getRMS(): Promise<{
+      status: boolean;
+      message?: string;
+      data?: unknown;
+    }>;
+
+    getHolding(): Promise<{
+      status: boolean;
+      message?: string;
+      data?: unknown;
+    }>;
+
+    getAllHolding(): Promise<{
+      status: boolean;
+      message?: string;
+      data?: unknown;
+    }>;
+
+    getPosition(): Promise<{
       status: boolean;
       message?: string;
       data?: unknown;

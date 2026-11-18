@@ -1,6 +1,6 @@
 import { SmartAPI } from "smartapi-javascript";
 import { generate } from "otplib";
-import { config } from "../config";
+import { config } from "../config/config";
 import { AppError } from "../errors";
 import { logger } from "../logger";
 

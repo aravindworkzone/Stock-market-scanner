@@ -1,6 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import type { IncomingMessage } from "node:http";
-import { config } from "./config.js";
+import { config } from "./config/config.js";
 
 const expected = Buffer.from(config.MCP_AUTH_TOKEN);
 
