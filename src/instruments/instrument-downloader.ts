@@ -1,4 +1,4 @@
-import { AppError } from '../errors.js';
+import { AppError } from '../core/errors.js';
 
 const INSTRUMENT_MASTER_URL = "https://margincalculator.angelone.in/OpenAPI_File/files/OpenAPIScripMaster.json";
 

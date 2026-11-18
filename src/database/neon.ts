@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
-import { config } from "../config.js";
-import { AppError } from "../errors.js";
+import { config } from "../config/config.js";
+import { AppError } from "../core/errors.js";
 
 function initializeNeon() {
   try {

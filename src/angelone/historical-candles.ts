@@ -1,6 +1,6 @@
 import { getAngelOneClient, handleSession } from "./session-manager.js";
-import { toAppError, AppError } from "../errors.js";
-import { logger } from "../logger.js";
+import { toAppError, AppError } from "../core/errors.js";
+import { logger } from "../core/logger.js";
 import type { AngelOneCandle, AngelOneApiResponse } from "../types/angelone.js";
 
 export default async function getHistoricalCandles(

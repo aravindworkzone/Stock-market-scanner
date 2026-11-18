@@ -1,8 +1,8 @@
 import { SmartAPI } from "smartapi-javascript";
 import { generate } from "otplib";
 import { config } from "../config/config";
-import { AppError } from "../errors";
-import { logger } from "../logger";
+import { AppError } from "../core/errors";
+import { logger } from "../core/logger";
 
 const TIME_SOURCES = [
   "https://margincalculator.angelone.in",

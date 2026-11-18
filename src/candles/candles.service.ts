@@ -1,7 +1,7 @@
 import getHistoricalCandles from "../angelone/historical-candles"
-import { toAppError, AppError } from "../errors";
+import { toAppError, AppError } from "../core/errors";
 import searchInstruments from "../instruments/instrument-search";
-import { logger } from "../logger";
+import { logger } from "../core/logger";
 import {saveDailyCandles} from "./candles.repository";
 import indexStock from "../indices/index-stock.service";
 
@@ -26,7 +26,7 @@ export async function uploadCandleData(
 
         const historicalCandles = await getHistoricalCandles(exchange, symboltoken, interval, fromdate, todate);
         if(!historicalCandles.status || !historicalCandles.data?.length) {
-            throw new AppError("BROKER_API_ERROR", "No candle data found for the specified parameters.");
+            throw new AppError("BROKER_API_ERROR", `No candle data found for the specified parameters. Details : ${exchange} | ${symboltoken} | ${interval} | ${fromdate} | ${todate}`);
         }
         const savedCount = await saveDailyCandles(exchange, symboltoken, symbol, historicalCandles.data);
         return savedCount;

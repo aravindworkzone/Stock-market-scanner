@@ -1,6 +1,6 @@
-import { AppError, toAppError } from '../../errors.js';
+import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
-import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
 
 export async function EMA(
@@ -30,10 +30,9 @@ export async function EMA(
 
         const EMA_date = fromToDate(currentDate, 'backward', EMA_period);
 
-        const Candle = await getHistoricalCandles(
+        const Candle = await getDailyCandles(
             exchange,
             symboltoken,
-            interval,
             EMA_date.fromdate,
             EMA_date.todate
         );
@@ -42,7 +41,7 @@ export async function EMA(
             throw new AppError('NO_DATA', 'Invalid historical candle response');
         }
 
-        const data = Candle.data as AngelOneCandle[];
+        const data: AngelOneCandle[] = toAngelOneCandles(Candle.data);
 
         const result = getEMA(data, period);
 

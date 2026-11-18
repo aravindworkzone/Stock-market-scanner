@@ -2,8 +2,8 @@ import { mkdir, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 
 import downloadInstrumentMaster from './instrument-downloader.js';
-import { logger } from '../logger.js';
-import { AppError, toAppError } from '../errors.js';
+import { logger } from '../core/logger.js';
+import { AppError, toAppError } from '../core/errors.js';
 import { InstrumentMasterSchema } from '../util/validator.js';
 import { reloadInstrumentMaster } from './instrument-load.js';
 

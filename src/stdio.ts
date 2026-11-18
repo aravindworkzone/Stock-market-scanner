@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config({
   path: path.resolve(
-    "C:\\Users\\arusa\\OneDrive\\Desktop\\My Bussiness\\Stock-market-scanner\\.env",
+    "C:\\Users\\77529\\Desktop\\manage\\s-market_scanner\\.env",
   ),
 });
 
@@ -21,8 +21,8 @@ async function main(): Promise<void> {
 }
 
 main().catch(async (error: unknown) => {
-  const { logger } = await import("./logger.js");
-  const { toAppError } = await import("./errors.js");
+  const { logger } = await import("./core/logger.js");
+  const { toAppError } = await import("./core/errors.js");
 
   const appError = toAppError(error);
 

@@ -1,47 +1,19 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
 import ServerInfo from "./config/server.config.js";
 import searchInstruments from "./instruments/instrument-search.js";
 import getHistoricalCandles from "./angelone/historical-candles.js";
 import indexStock from "./indices/index-stock.service.js";
-import { SMA } from "./calculator/indiactors/SMA.js";
-import { EMA } from "./calculator/indiactors/EMA.js";
-import { getAllHolding, getPosition, getProfile, getRMS, getHolding } from "./angelone/getAngleone.js";
-import RSI from "./calculator/indiactors/RSI.js";
-import MACD from "./calculator/indiactors/MACD.js";
-import ATR from "./calculator/indiactors/ATR.js";
-import SupportResistance from "./calculator/indiactors/SupportResistance.js";
-import Week52HighLow from "./calculator/indiactors/Week52HighLow.js";
-import VolumeAverage from "./calculator/indiactors/VolumeAverage.js";
-import AllIndicators from "./calculator/indiactors/all_Indicator.js";
-
-const ServerInfo = {
-  search_instruments: {
-    title: "Search Instruments",
-    description:
-      "Search the local Angel One instrument master on NSE or BSE by company name, trading symbol, or exact token. At least one of name, symbol, or token is required; if you give several, all must match. Name and symbol are case-insensitive, ignore spaces ('HDFC BANK' matches 'HDFCBANK'), and allow partial matches. Token must match exactly. Returns up to 'limit' matching instruments plus the total match count, so use a specific query. Call this first to get the exact symbol and symboltoken for other market tools. Read-only; does not place trades or fetch live prices.",
-    inputSchema: {
-      query: z.object({
-        name: z.string().trim().min(1).max(100).optional()
-          .describe("Company name, partial allowed, e.g. HDFC BANK"),
-        symbol: z.string().trim().min(1).max(100).optional()
-          .describe("Trading symbol, partial allowed, e.g. HDFCBANK-EQ"),
-        token: z.string().trim().min(1).max(20).optional()
-          .describe("Exact Angel One symbol token, e.g. 1333"),
-      }),
-      exchange: z.enum(["NSE", "BSE"])
-        .describe("Exchange to search: NSE or BSE"),
-      limit: z.number().int().min(1).max(100).default(20)
-        .describe("Maximum results to return, default 20"),
-    },
-    annotations: {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
-    },
-  },
-}
+import { SMA } from "./calculators/indicators/sma.js";
+import { EMA } from "./calculators/indicators/ema.js";
+import { getAllHolding, getPosition, getProfile, getRMS, getHolding } from "./angelone/getAngelone.js";
+import RSI from "./calculators/indicators/rsi.js";
+import MACD from "./calculators/indicators/macd.js";
+import ATR from "./calculators/indicators/atr.js";
+import SupportResistance from "./calculators/indicators/support-resistance.js";
+import Week52HighLow from "./calculators/indicators/week-52-high-low.js";
+import VolumeAverage from "./calculators/indicators/volume-average.js";
+import AllIndicators from "./calculators/indicators/all-indicators.js";
+import { cachedBulkIndicatorScanner, summarizeStock } from "./calculators/indicators/bulk-indicators-scanner.js";
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -229,6 +201,33 @@ export function createMcpServer(): McpServer {
       const result = await AllIndicators(exchange, symboltoken, interval, period);
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    },
+  );
+
+  server.registerTool(
+    "bulk_indicators_scanner",
+    ServerInfo.bulk_indicators_scanner,
+    async ({ index, period, offset, limit }) => {
+      const scan = await cachedBulkIndicatorScanner(index, { period });
+      const page = scan.results.slice(offset, offset + limit).map(summarizeStock);
+      const nextOffset = offset + page.length;
+
+      const result = {
+        index: scan.index,
+        scannedAt: scan.scannedAt,
+        totalStocks: scan.totalStocks,
+        successCount: scan.successCount,
+        failedCount: scan.failedCount,
+        offset,
+        returned: page.length,
+        nextOffset: nextOffset < scan.results.length ? nextOffset : null,
+        stocks: page,
+        failedStocks: scan.failedStocks,
+      };
+
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
       };
     },
   );

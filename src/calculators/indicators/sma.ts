@@ -1,7 +1,7 @@
 
 import { AngelOneCandle } from '../../types/angelone.js';
-import { AppError, toAppError } from '../../errors.js';
-import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { AppError, toAppError } from '../../core/errors.js';
+import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { Direction } from '../../types/indices.js';
 import fromToDate from '../../util/fromToDate.js';
 
@@ -36,7 +36,8 @@ export async function SMA(
             throw new AppError('VALIDATION_ERROR', 'Invalid direction.');
         }
 
-        const parsedDate = new Date(`${date}T00:00:00+05:30`);
+        // Parse as UTC so toISOString() round-trips to the same calendar date
+        const parsedDate = new Date(`${date}T00:00:00Z`);
 
         if (
             !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
@@ -48,18 +49,17 @@ export async function SMA(
 
         const tradingDays = fromToDate(date, direction, period);
 
-        const Candle = await getHistoricalCandles(
+        const Candle = await getDailyCandles(
             exchange,
             symboltoken,
-            interval,
             tradingDays.fromdate,
             tradingDays.todate
         );
 
         if (!Candle || Candle.status !== true) {
             throw new AppError(
-                'BROKER_API_ERROR',
-                `Angel One failed: status=${Candle?.status}, code=${Candle?.errorcode}, msg=${Candle?.message}`
+                'DATABASE_ERROR',
+                `Unable to fetch daily candles: ${Candle?.message}`
             );
         }
 
@@ -70,7 +70,7 @@ export async function SMA(
             );
         }
 
-        const data: AngelOneCandle[] = Candle.data;
+        const data: AngelOneCandle[] = toAngelOneCandles(Candle.data);
 
         const result = getSMA(data, period);
 

@@ -1,5 +1,5 @@
 import { Neon } from "./index.js";
-import { AppError } from "../errors.js";
+import { AppError } from "../core/errors.js";
 
 export default async function checkDatabaseConnection(): Promise<boolean> {
   try {

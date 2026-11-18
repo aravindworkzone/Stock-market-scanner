@@ -2,10 +2,10 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { InstrumentMasterSchema } from '../util/validator.js';
 import { type InstrumentRecord } from '../types/instruments.js';
-import { AppError } from '../errors.js';
+import { AppError } from '../core/errors.js';
 
 const INSTRUMENT_MASTER_FILE = path.resolve(
-  'C:\\Users\\arusa\\OneDrive\\Desktop\\My Bussiness\\Stock-market-scanner\\data\\instruments\\OpenAPIScripMaster.json',
+  'C:\\Users\\77529\\Desktop\\manage\\s-market_scanner\\data\\instruments\\OpenAPIScripMaster.json',
 );
 let instrumentCache: InstrumentRecord[] | null = null;
 

@@ -1,16 +1,16 @@
-import { toAppError } from '../../errors.js';
+import { toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
-import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
 
-import { getSMA } from './SMA.js';
-import { getEMA } from './EMA.js';
-import { getRSI } from './RSI.js';
-import { getMACD } from './MACD.js';
-import { getATR } from './ATR.js';
-import { getVolumeAverage } from './VolumeAverage.js';
-import { getWeek52HighLow } from './Week52HighLow.js';
-import { getSupportResistance } from './SupportResistance.js';
+import { getSMA } from './sma.js';
+import { getEMA } from './ema.js';
+import { getRSI } from './rsi.js';
+import { getMACD } from './macd.js';
+import { getATR } from './atr.js';
+import { getVolumeAverage } from './volume-average.js';
+import { getWeek52HighLow } from './week-52-high-low.js';
+import { getSupportResistance } from './support-resistance.js';
 
 export default async function AllIndicators(
     exchange: string,
@@ -33,11 +33,9 @@ export default async function AllIndicators(
             Math.max(period * 5, 365)
         );
 
-        // Fetch selected interval candles
-        const response = await getHistoricalCandles(
+        const response = await getDailyCandles(
             exchange,
             symboltoken,
-            interval,
             fromdate,
             todate
         );
@@ -46,13 +44,12 @@ export default async function AllIndicators(
             throw new Error(response.message || 'Unable to fetch historical candles');
         }
 
-        const Candle: AngelOneCandle[] = response.data;
+        const Candle: AngelOneCandle[] = toAngelOneCandles(response.data);
 
         if (Candle.length === 0) {
             throw new Error('No historical candles available');
         }
 
-        // Fetch daily candles for static 52-week calculation
         let dailyCandle: AngelOneCandle[] = Candle;
 
         if (interval !== 'ONE_DAY') {
@@ -62,10 +59,9 @@ export default async function AllIndicators(
                 365
             );
 
-            const dailyResponse = await getHistoricalCandles(
+            const dailyResponse = await getDailyCandles(
                 exchange,
                 symboltoken,
-                'ONE_DAY',
                 dailyDates.fromdate,
                 dailyDates.todate
             );
@@ -74,7 +70,7 @@ export default async function AllIndicators(
                 throw new Error(dailyResponse.message || 'Unable to fetch daily candles');
             }
 
-            dailyCandle = dailyResponse.data;
+            dailyCandle = toAngelOneCandles(dailyResponse.data);
         }
 
         return {
@@ -86,13 +82,15 @@ export default async function AllIndicators(
             SMA: {
                 10: getSMA(Candle, 10),
                 20: getSMA(Candle, 20),
-                50: getSMA(Candle, 50)
+                50: getSMA(Candle, 50),
+                200: getSMA(Candle, 200),
             },
 
             EMA: {
                 10: getEMA(Candle, 10),
                 20: getEMA(Candle, 20),
-                50: getEMA(Candle, 50)
+                50: getEMA(Candle, 50),
+                200: getEMA(Candle, 200)
             },
 
             RSI: getRSI(Candle, period),

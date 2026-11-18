@@ -1,5 +1,5 @@
 import { INDEX_CONFIG } from "./index.config.js";
-import { AppError } from "../errors.js";
+import { AppError } from "../core/errors.js";
 import { NSEIndexResponse, MarketIndex } from '../types/indices.js';
 import { EXCLUDED_INDEX_IDS } from "./index.constants.js";
 

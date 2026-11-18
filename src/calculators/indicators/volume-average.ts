@@ -1,6 +1,6 @@
-import { AppError, toAppError } from '../../errors.js';
+import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
-import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
 
 export default async function VolumeAverage(
@@ -43,18 +43,17 @@ export default async function VolumeAverage(
             candleCount
         );
 
-        const Candle = await getHistoricalCandles(
+        const Candle = await getDailyCandles(
             exchange,
             symboltoken,
-            interval,
             volumeDate.fromdate,
             volumeDate.todate
         );
 
         if (!Candle || Candle.status !== true) {
             throw new AppError(
-                'BROKER_API_ERROR',
-                `Angel One failed: status=${Candle?.status}, code=${Candle?.errorcode}, msg=${Candle?.message}`
+                'DATABASE_ERROR',
+                `Unable to fetch daily candles: ${Candle?.message}`
             );
         }
 
@@ -65,7 +64,7 @@ export default async function VolumeAverage(
             );
         }
 
-        const data: AngelOneCandle[] = Candle.data;
+        const data: AngelOneCandle[] = toAngelOneCandles(Candle.data);
 
         const result = getVolumeAverage(data, period);
 

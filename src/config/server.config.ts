@@ -14,20 +14,29 @@ export default {
         }
     },
     search_instruments: {
-        title: "Search Instruments",
-        description: "Search the local Angel One instrument master by company name or trading symbol on NSE or BSE. Case-insensitive, spaces ignored ('HDFC BANK' matches 'HDFCBANK'), partial matches allowed. Returns all matching instruments, so use a specific query. Use this to find the exact symbol and token before calling other market tools. Read-only; does not place trades or fetch live prices.",
-        inputSchema: {
-            query: z.string().trim().min(1).max(100)
-                .describe("Stock name or trading symbol, e.g. HDFC BANK"),
-            exchange: z.enum(["NSE", "BSE"])
-                .describe("Exchange to search: NSE or BSE"),
-        },
-        annotations: {
-            readOnlyHint: true,
-            destructiveHint: false,
-            idempotentHint: true,
-            openWorldHint: false,
-        },
+    title: "Search Instruments",
+    description:
+        "Search the local Angel One instrument master on NSE or BSE by company name, trading symbol, or exact token. At least one of name, symbol, or token is required; if you give several, all must match. Name and symbol are case-insensitive, ignore spaces ('HDFC BANK' matches 'HDFCBANK'), and allow partial matches. Token must match exactly. Returns up to 'limit' matching instruments plus the total match count, so use a specific query. Call this first to get the exact symbol and symboltoken for other market tools. Read-only; does not place trades or fetch live prices.",
+    inputSchema: {
+        query: z.object({
+        name: z.string().trim().min(1).max(100).optional()
+            .describe("Company name, partial allowed, e.g. HDFC BANK"),
+        symbol: z.string().trim().min(1).max(100).optional()
+            .describe("Trading symbol, partial allowed, e.g. HDFCBANK-EQ"),
+        token: z.string().trim().min(1).max(20).optional()
+            .describe("Exact Angel One symbol token, e.g. 1333"),
+        }),
+        exchange: z.enum(["NSE", "BSE"])
+        .describe("Exchange to search: NSE or BSE"),
+        limit: z.number().int().min(1).max(100).default(20)
+        .describe("Maximum results to return, default 20"),
+    },
+    annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+    },
     },
     get_historical_candles: {
         title: "Get Historical Candles",
@@ -322,6 +331,28 @@ export default {
         ]).default("ONE_DAY").describe("Candle size, default ONE_DAY"),
         period: z.number().int().min(2).max(100).default(14)
         .describe("Period for RSI, ATR, and volume average, default 14"),
+    },
+    annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
+    },
+    },
+
+    bulk_indicators_scanner: {
+    title: "Bulk Indicators Scanner",
+    description:
+        "Scan every stock in an NSE index (NIFTY 50 or NIFTY 500) and return one compact row of daily indicators per stock: close, SMA and EMA (10, 20, 50, 200), RSI, MACD line/signal/histogram, ATR, relative volume, 52-week high/low with distance %, and nearest support/resistance. Uses daily candles stored in the database. Results are paginated with offset and limit, sorted by symbol; the scan is cached for 15 minutes so fetching further pages is fast. Stocks without enough candle history are listed in failedStocks with the reason. Use calculate_all_indicators for full detail on one stock. Read-only; does not place trades.",
+    inputSchema: {
+        index: z.enum(["NIFTY 50", "NIFTY 500"]).default("NIFTY 500")
+        .describe("Index to scan, default NIFTY 500"),
+        period: z.number().int().min(2).max(100).default(14)
+        .describe("Period for RSI, ATR, and volume average, default 14"),
+        offset: z.number().int().min(0).default(0)
+        .describe("Number of stocks to skip (sorted by symbol), default 0"),
+        limit: z.number().int().min(1).max(100).default(50)
+        .describe("Number of stocks to return per page, default 50, max 100"),
     },
     annotations: {
         readOnlyHint: true,

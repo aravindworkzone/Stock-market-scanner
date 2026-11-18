@@ -2,9 +2,9 @@ import { createServer, type ServerResponse } from "node:http";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createMcpServer } from "./server.js";
 import { config } from "./config/config.js";
-import { logger } from "./logger.js";
-import { toAppError } from "./errors.js";
-import { isAuthorized, rateLimit } from "./auth.js";
+import { logger } from "./core/logger.js";
+import { toAppError } from "./core/errors.js";
+import { isAuthorized, rateLimit } from "./core/auth.js";
 import  checkDatabaseConnection  from "./database/health-check.js";
 
 function sendError(res: ServerResponse, status: number, message: string): void {

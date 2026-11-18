@@ -1,6 +1,6 @@
 import { loadInstrumentMaster } from './instrument-load.js';
 import { type InstrumentRecord } from '../types/instruments.js';
-import { AppError } from '../errors.js';
+import { AppError } from '../core/errors.js';
 
 interface queryParams {
     token?: string;

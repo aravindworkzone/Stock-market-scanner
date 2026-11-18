@@ -1,6 +1,6 @@
 import { Neon } from "../database/index.js";
-import { AppError } from "../errors.js";
-import { logger } from "../logger.js";
+import { AppError } from "../core/errors.js";
+import { logger } from "../core/logger.js";
 import type { AngelOneCandle } from "../types/angelone.js";
 
 interface DailyCandleRecord {
@@ -165,6 +165,32 @@ export async function saveDailyCandles(
   }
 }
 
+/**
+ * Converts daily_candles rows (objects keyed by column name) into
+ * AngelOne-style candle tuples: [timestamp, open, high, low, close, volume].
+ * candle_date comes back from Neon as a UTC Date, so it is formatted in IST.
+ */
+export function toAngelOneCandles(
+  rows: Record<string, unknown>[],
+): AngelOneCandle[] {
+  return rows.map((row) => {
+    const rawDate = row.candle_date;
+    const candleDate =
+      rawDate instanceof Date
+        ? rawDate.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })
+        : String(rawDate).slice(0, 10);
+
+    return [
+      `${candleDate}T00:00:00+05:30`,
+      Number(row.open),
+      Number(row.high),
+      Number(row.low),
+      Number(row.close),
+      Number(row.volume),
+    ];
+  });
+}
+
 export async function getDailyCandles(
   exchange: string,
   symbolToken: string,
@@ -182,7 +208,7 @@ export async function getDailyCandles(
       ORDER BY candle_date
     `;
 
-    return candles;
+    return {status: true, message: "Fetch Scuccessfull", data: candles};
   } catch (error: unknown) {
     const dbError = error as {
       message?: string;

@@ -1,5 +1,5 @@
 import { getAngelOneClient } from "./session-manager.js";
-import { toAppError } from "../errors.js";
+import { toAppError } from "../core/errors.js";
 
 export async function getProfile() {
     try {

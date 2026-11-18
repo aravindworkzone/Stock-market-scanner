@@ -1,4 +1,4 @@
-import {getProfile} from "./getAngleone.js";
+import {getProfile} from "./getAngelone.js";
 
 getProfile()
     .then((profile) => {

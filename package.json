@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "update_instrument": "tsx src/instruments/run-instrument-update.ts",
     "update_candle_nifty_500": "tsx src/candles/candles-update-nifty500.ts",
-    "test_cal": "tsx src/calculator/indiactors/test-indicators.ts",
+    "test_cal": "tsx src/calculators/indicators/test-indicators.ts",
     "session-rest": "tsx src/angelone/force-rest-session.ts",
     "test_angelone": "tsx src/angelone/test-angelone.ts",
     "start": "tsx src/main.ts",

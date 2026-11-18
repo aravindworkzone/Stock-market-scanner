@@ -1,6 +1,6 @@
-import { AppError, toAppError } from '../../errors.js';
+import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
-import getHistoricalCandles from '../../angelone/historical-candles.js';
+import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
 
 export default async function Week52HighLow(
@@ -25,18 +25,17 @@ export default async function Week52HighLow(
         const fromdate = `${from.toISOString().slice(0, 10)} 09:15`;
         const todate = `${currentDate} 15:30`;
 
-        const Candle = await getHistoricalCandles(
+        const Candle = await getDailyCandles(
             exchange,
             symboltoken,
-            'ONE_DAY',
             fromdate,
             todate
         );
 
         if (!Candle || Candle.status !== true) {
             throw new AppError(
-                'BROKER_API_ERROR',
-                `Angel One failed: status=${Candle?.status}, code=${Candle?.errorcode}, msg=${Candle?.message}`
+                'DATABASE_ERROR',
+                `Unable to fetch daily candles: ${Candle?.message}`
             );
         }
 
@@ -47,7 +46,7 @@ export default async function Week52HighLow(
             );
         }
 
-        const data: AngelOneCandle[] = Candle.data;
+        const data: AngelOneCandle[] = toAngelOneCandles(Candle.data);
 
         const result = getWeek52HighLow(data);
 
