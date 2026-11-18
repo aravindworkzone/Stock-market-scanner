@@ -5,6 +5,7 @@ import { config } from "./config.js";
 import { logger } from "./logger.js";
 import { toAppError } from "./errors.js";
 import { isAuthorized, rateLimit } from "./auth.js";
+import  checkDatabaseConnection  from "./database/health-check.js";
 
 function sendError(res: ServerResponse, status: number, message: string): void {
   res.writeHead(status, { "Content-Type": "application/json" });
@@ -12,6 +13,9 @@ function sendError(res: ServerResponse, status: number, message: string): void {
 }
 
 async function main(): Promise<void> {
+  const dbConnected = await checkDatabaseConnection();
+
+  console.log("Supabase connected:", dbConnected);
   logger.info(`Starting MCP server in ${config.NODE_ENV}`);
 
   const httpServer = createServer(async (req, res) => {

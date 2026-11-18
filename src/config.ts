@@ -19,6 +19,12 @@ const configSchema = z.object({
   ANGELONE_CLIENT_CODE: z.string().trim().min(1, "ANGELONE_CLIENT_CODE is required"),
   ANGELONE_PIN: z.string().min(1, "ANGELONE_PIN is required"),
   ANGELONE_TOTP_SECRET: z.string().trim().min(1, "ANGELONE_TOTP_SECRET is required"),
+
+  DATABASE_URL_UNPOOLED: z.string().url("DATABASE_URL_UNPOOLED must be a valid URL"),
+  NEON_BRANCH: z.string().trim().min(1, "NEON_BRANCH is required"),
+  NEON_BRANCH_ID: z.string().trim().min(1, "NEON_BRANCH_ID is required"),
+  NEON_FUNCTION_HOST_SUFFIX: z.string().trim().min(1, "NEON_FUNCTION_HOST_SUFFIX is required"),
+  DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL")
 });
 
 const result = configSchema.safeParse(process.env);

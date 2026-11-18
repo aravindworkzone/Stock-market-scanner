@@ -4,6 +4,34 @@ import searchInstruments from "./instruments/instrument-search.js";
 import getHistoricalCandles from "./angelone/historical-candles.js";
 import indexStock from "./indices/index-stock.service.js";
 
+const ServerInfo = {
+  search_instruments: {
+    title: "Search Instruments",
+    description:
+      "Search the local Angel One instrument master on NSE or BSE by company name, trading symbol, or exact token. At least one of name, symbol, or token is required; if you give several, all must match. Name and symbol are case-insensitive, ignore spaces ('HDFC BANK' matches 'HDFCBANK'), and allow partial matches. Token must match exactly. Returns up to 'limit' matching instruments plus the total match count, so use a specific query. Call this first to get the exact symbol and symboltoken for other market tools. Read-only; does not place trades or fetch live prices.",
+    inputSchema: {
+      query: z.object({
+        name: z.string().trim().min(1).max(100).optional()
+          .describe("Company name, partial allowed, e.g. HDFC BANK"),
+        symbol: z.string().trim().min(1).max(100).optional()
+          .describe("Trading symbol, partial allowed, e.g. HDFCBANK-EQ"),
+        token: z.string().trim().min(1).max(20).optional()
+          .describe("Exact Angel One symbol token, e.g. 1333"),
+      }),
+      exchange: z.enum(["NSE", "BSE"])
+        .describe("Exchange to search: NSE or BSE"),
+      limit: z.number().int().min(1).max(100).default(20)
+        .describe("Maximum results to return, default 20"),
+    },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+}
+
 export function createMcpServer(): McpServer {
   const server = new McpServer({
     name: "s-market-scanner",
@@ -26,30 +54,15 @@ export function createMcpServer(): McpServer {
       }),
   );
 
-  server.registerTool(
-    "search_instruments",
-    {
-      description:
-        "Search the local Angel One instrument master by stock name or trading symbol. Supports NSE and BSE. Returns up to 10 matching instruments. Read-only; does not place trades.",
-      inputSchema: {
-        query: z.string().trim().min(1).max(100)
-          .describe("Stock name or trading symbol, e.g. HDFC BANK"),
-        exchange: z.enum(["NSE", "BSE"])
-          .describe("Exchange to search: NSE or BSE"),
-      },
-    },
-    async ({ query, exchange }) => {
-      const instruments = await searchInstruments(query, exchange);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(instruments, null, 2),
-          },
-        ],
-      };
-    },
-  );
+  server.registerTool("search_instruments", ServerInfo.search_instruments, async ({ query, exchange, limit }) => {
+    try {
+      const matches = await searchInstruments(query, exchange);
+      const result = { totalMatches: matches.length, returned: Math.min(limit, matches.length), instruments: matches.slice(0, limit) };
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    } catch (error) {
+      return { content: [{ type: "text", text: "Error occurred while searching instruments :" + error }] };
+    }
+  });
 
   server.registerTool(
     "get_historical_candles",

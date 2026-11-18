@@ -11,26 +11,26 @@ export default async function getHistoricalCandles(
   todate: string,
 ): Promise<AngelOneApiResponse<AngelOneCandle[]>> {
   try {
-    if (!exchange || !symboltoken || !interval || !fromdate || !todate) {
-      throw new AppError(
-        "VALIDATION_ERROR",
-        "Please provide valid candle request details.",
-      );
-    }
+  if (!exchange || !symboltoken || !interval || !fromdate || !todate) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      "Please provide valid candle request details.",
+    );
+  }
 
-    return handleSession(async () => {
-      const smartApi = await getAngelOneClient();
+  return handleSession(async () => {
+    const smartApi = await getAngelOneClient();
 
-      const historicalCandles = await smartApi.getCandleData({
-        exchange,
-        symboltoken,
-        interval,
-        fromdate,
-        todate,
-      });
-
-      return historicalCandles;
+    const historicalCandles = await smartApi.getCandleData({
+      exchange,
+      symboltoken,
+      interval,
+      fromdate,
+      todate,
     });
+
+    return historicalCandles;
+  });
 
   } catch (error: unknown) {
     const candleError = toAppError(error);
