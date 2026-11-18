@@ -1,38 +1,35 @@
 import { loadInstrumentMaster } from './instrument-load.js';
 import { type InstrumentRecord } from '../types/instruments.js';
-import { toAppError } from '../errors.js';
-import { logger } from '../logger.js';
+import { AppError } from '../errors.js';
 
-export default async function searchInstruments (query: string, exch_seg: string): Promise<InstrumentRecord[]> {
-    let instruments: InstrumentRecord[];
-    try {
-        instruments = await loadInstrumentMaster();
-    } catch (error) {
-        const appError = toAppError(error);
+interface queryParams {
+    token?: string;
+    symbol?: string;
+    name?: string;
+}
 
-        logger.error(appError.message, appError.code);
+function normalizedQuery(value: string) {
+    return value.replace(/\s+/g, '').toLowerCase().trim();
+}
 
-        throw appError;
+export default async function searchInstruments (query: queryParams, exch_seg: string): Promise<InstrumentRecord[]> {
+
+    if (![query.token, query.symbol, query.name].some(v => v?.trim())) {
+        throw new AppError("VALIDATION_ERROR", "Please provide a valid search query.");
     }
 
-    const normalizedQuery = query.replace(/\s+/g, '').toLowerCase();
-    const normalizedExchange = exch_seg.trim().toLowerCase();
+    const instruments = await loadInstrumentMaster();
 
-    return instruments.filter((instrument) => {
-        const normalizedName = instrument.name
-            .replace(/\s+/g, '')
-            .toLowerCase();
+    const n = normalizedQuery;
+    const name = query.name?.trim() ? n(query.name) : undefined;
+    const symbol = query.symbol?.trim() ? n(query.symbol) : undefined;
+    const token = query.token?.trim() || undefined;
+    const OptExchange = n(exch_seg);
 
-        const normalizedSymbol = instrument.symbol
-            .replace(/\s+/g, '')
-            .toLowerCase();
-
-        return (
-            instrument.exch_seg.toLowerCase() === normalizedExchange &&
-            (
-                normalizedName.includes(normalizedQuery) ||
-                normalizedSymbol.includes(normalizedQuery)
-            )
-        );
-    });
-};
+    return instruments.filter((i) =>
+        n(i.exch_seg) === OptExchange &&
+        (!name || n(i.name).includes(name)) &&
+        (!symbol || n(i.symbol).includes(symbol)) &&
+        (!token || i.token === token)
+    );
+}
