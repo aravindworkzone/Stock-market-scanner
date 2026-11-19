@@ -1,0 +1,253 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": {
+    "fetched": [
+      {
+        "exchange": "NFO",
+        "tradingSymbol": "NIFTY23NOV26FUT",
+        "symbolToken": "61471",
+        "ltp": 25324.9,
+        "open": 25180,
+        "high": 25340,
+        "low": 25100.1,
+        "close": 25239.3,
+        "lastTradeQty": 65,
+        "exchFeedTime": "19-Nov-2026 11:14:27",
+        "exchTradeTime": "19-Nov-2026 11:14:26",
+        "netChange": 85.6,
+        "percentChange": 0.34,
+        "avgPrice": 25247.91,
+        "tradeVolume": 1504295,
+        "opnInterest": 10738975,
+        "lowerCircuit": 22715.4,
+        "upperCircuit": 27763.2,
+        "totBuyQuan": 335205,
+        "totSellQuan": 221000,
+        "referenceLimitPrice": 0,
+        "52WeekLow": 0,
+        "52WeekHigh": 25550.6,
+        "depth": {
+          "buy": [
+            {
+              "price": 25322.4,
+              "quantity": 260,
+              "orders": 3
+            },
+            {
+              "price": 25322.3,
+              "quantity": 130,
+              "orders": 2
+            },
+            {
+              "price": 25322.2,
+              "quantity": 195,
+              "orders": 3
+            },
+            {
+              "price": 25322.1,
+              "quantity": 325,
+              "orders": 5
+            },
+            {
+              "price": 25322,
+              "quantity": 390,
+              "orders": 6
+            }
+          ],
+          "sell": [
+            {
+              "price": 25328,
+              "quantity": 65,
+              "orders": 1
+            },
+            {
+              "price": 25330,
+              "quantity": 195,
+              "orders": 3
+            },
+            {
+              "price": 25331,
+              "quantity": 650,
+              "orders": 1
+            },
+            {
+              "price": 25333.9,
+              "quantity": 65,
+              "orders": 1
+            },
+            {
+              "price": 25334,
+              "quantity": 520,
+              "orders": 1
+            }
+          ]
+        }
+      },
+      {
+        "exchange": "NSE",
+        "tradingSymbol": "RELIANCE-EQ",
+        "symbolToken": "2885",
+        "ltp": 1360,
+        "open": 1361.9,
+        "high": 1366.7,
+        "low": 1349.7,
+        "close": 1363,
+        "lastTradeQty": 1,
+        "exchFeedTime": "19-Nov-2026 11:14:27",
+        "exchTradeTime": "19-Nov-2026 11:14:27",
+        "netChange": -3,
+        "percentChange": -0.22,
+        "avgPrice": 1359.78,
+        "tradeVolume": 3889046,
+        "opnInterest": 430619000,
+        "lowerCircuit": 1226.7,
+        "upperCircuit": 1499.3,
+        "totBuyQuan": 555901,
+        "totSellQuan": 1068270,
+        "referenceLimitPrice": 0,
+        "52WeekLow": 1152.2,
+        "52WeekHigh": 1611.8,
+        "depth": {
+          "buy": [
+            {
+              "price": 1360,
+              "quantity": 1,
+              "orders": 1
+            },
+            {
+              "price": 1359.9,
+              "quantity": 30,
+              "orders": 1
+            },
+            {
+              "price": 1359.8,
+              "quantity": 512,
+              "orders": 4
+            },
+            {
+              "price": 1359.7,
+              "quantity": 355,
+              "orders": 2
+            },
+            {
+              "price": 1359.6,
+              "quantity": 527,
+              "orders": 5
+            }
+          ],
+          "sell": [
+            {
+              "price": 1360.1,
+              "quantity": 70,
+              "orders": 2
+            },
+            {
+              "price": 1360.2,
+              "quantity": 205,
+              "orders": 5
+            },
+            {
+              "price": 1360.3,
+              "quantity": 660,
+              "orders": 11
+            },
+            {
+              "price": 1360.4,
+              "quantity": 654,
+              "orders": 10
+            },
+            {
+              "price": 1360.5,
+              "quantity": 491,
+              "orders": 9
+            }
+          ]
+        }
+      },
+      {
+        "exchange": "NSE",
+        "tradingSymbol": "SBIN-EQ",
+        "symbolToken": "3045",
+        "ltp": 1144.4,
+        "open": 1148,
+        "high": 1152.5,
+        "low": 1141,
+        "close": 1135,
+        "lastTradeQty": 200,
+        "exchFeedTime": "19-Nov-2026 11:14:28",
+        "exchTradeTime": "19-Nov-2026 11:14:26",
+        "netChange": 9.4,
+        "percentChange": 0.83,
+        "avgPrice": 1145.65,
+        "tradeVolume": 15824362,
+        "opnInterest": 233958000,
+        "lowerCircuit": 1021.5,
+        "upperCircuit": 1248.5,
+        "totBuyQuan": 808277,
+        "totSellQuan": 1483978,
+        "referenceLimitPrice": 0,
+        "52WeekLow": 933.9,
+        "52WeekHigh": 1234.7,
+        "depth": {
+          "buy": [
+            {
+              "price": 1144.1,
+              "quantity": 18,
+              "orders": 3
+            },
+            {
+              "price": 1144.05,
+              "quantity": 9,
+              "orders": 1
+            },
+            {
+              "price": 1144,
+              "quantity": 3490,
+              "orders": 17
+            },
+            {
+              "price": 1143.95,
+              "quantity": 194,
+              "orders": 1
+            },
+            {
+              "price": 1143.9,
+              "quantity": 1769,
+              "orders": 7
+            }
+          ],
+          "sell": [
+            {
+              "price": 1144.4,
+              "quantity": 222,
+              "orders": 2
+            },
+            {
+              "price": 1144.5,
+              "quantity": 743,
+              "orders": 7
+            },
+            {
+              "price": 1144.55,
+              "quantity": 176,
+              "orders": 1
+            },
+            {
+              "price": 1144.6,
+              "quantity": 1319,
+              "orders": 9
+            },
+            {
+              "price": 1144.65,
+              "quantity": 582,
+              "orders": 3
+            }
+          ]
+        }
+      }
+    ],
+    "unfetched": []
+  }
+}

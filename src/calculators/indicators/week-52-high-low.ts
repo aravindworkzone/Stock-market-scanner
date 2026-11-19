@@ -2,6 +2,7 @@ import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
 import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
+import { readValidatedHighLowClose } from './candle-validation.js';
 
 export default async function Week52HighLow(
     exchange: string,
@@ -67,55 +68,7 @@ export function getWeek52HighLow(Candle: AngelOneCandle[]) {
         );
     }
 
-    // Validate candle structure and OHLC values
-    const candles = Candle.map((candle) => {
-        if (!Array.isArray(candle) || candle.length < 5) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle structure.'
-            );
-        }
-
-        const high = Number(candle[2]);
-        const low = Number(candle[3]);
-        const close = Number(candle[4]);
-
-        if (
-            !Number.isFinite(high) ||
-            !Number.isFinite(low) ||
-            !Number.isFinite(close) ||
-            high <= 0 ||
-            low <= 0 ||
-            close <= 0 ||
-            high < low ||
-            close > high ||
-            close < low
-        ) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle OHLC values.'
-            );
-        }
-
-        return { high, low, close };
-    });
-
-    // Validate chronological order
-    for (let i = 1; i < Candle.length; i++) {
-        const previousTime = new Date(Candle[i - 1][0]).getTime();
-        const currentTime = new Date(Candle[i][0]).getTime();
-
-        if (
-            !Number.isFinite(previousTime) ||
-            !Number.isFinite(currentTime) ||
-            currentTime <= previousTime
-        ) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Candles must be in valid chronological ascending order.'
-            );
-        }
-    }
+    const candles = readValidatedHighLowClose(Candle);
 
     // Calculate 52-week high and low
     const high52Week = Math.max(

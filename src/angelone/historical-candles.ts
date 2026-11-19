@@ -1,7 +1,8 @@
-import { getAngelOneClient, handleSession } from "./session-manager.js";
+import type { SmartApiEnvelope } from "smartapi-javascript";
+import { call } from "./getAngelone.js";
 import { toAppError, AppError } from "../core/errors.js";
 import { logger } from "../core/logger.js";
-import type { AngelOneCandle, AngelOneApiResponse } from "../types/angelone.js";
+import type { AngelOneCandle } from "../types/angelone.js";
 
 export default async function getHistoricalCandles(
   exchange: string,
@@ -9,29 +10,18 @@ export default async function getHistoricalCandles(
   interval: string,
   fromdate: string,
   todate: string,
-): Promise<AngelOneApiResponse<AngelOneCandle[]>> {
+): Promise<SmartApiEnvelope<AngelOneCandle[]>> {
   try {
     if (!exchange || !symboltoken || !interval || !fromdate || !todate) {
       throw new AppError(
         "VALIDATION_ERROR",
-        "Please provide valid candle request details.",
+        "[VALIDATION_ERROR] Please provide valid candle request details.",
       );
     }
 
-  return handleSession(async () => {
-    const smartApi = await getAngelOneClient();
-
-      const historicalCandles = await smartApi.getCandleData({
-        exchange,
-        symboltoken,
-        interval,
-        fromdate,
-        todate,
-      });
-
-    return historicalCandles;
-  });
-
+    return await call<AngelOneCandle[]>("getCandleData", (client) =>
+      client.getCandleData({ exchange, symboltoken, interval, fromdate, todate }),
+    );
   } catch (error: unknown) {
     const candleError = toAppError(error);
     logger.error(candleError.message, candleError.code);

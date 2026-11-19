@@ -1,0 +1,133 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": {
+    "summary": {
+      "total_charges": 18.9392,
+      "trade_value": 8000,
+      "breakup": [
+        {
+          "name": "[REDACTED]",
+          "amount": 8,
+          "msg": "",
+          "breakup": null
+        },
+        {
+          "name": "[REDACTED]",
+          "amount": 1.4536,
+          "msg": "",
+          "breakup": [
+            {
+              "name": "[REDACTED]",
+              "amount": 0.2456,
+              "msg": "",
+              "breakup": null
+            },
+            {
+              "name": "[REDACTED]",
+              "amount": 1.2,
+              "msg": "",
+              "breakup": null
+            },
+            {
+              "name": "[REDACTED]",
+              "amount": 0,
+              "msg": "",
+              "breakup": null
+            },
+            {
+              "name": "[REDACTED]",
+              "amount": 0.008,
+              "msg": "",
+              "breakup": null
+            }
+          ]
+        },
+        {
+          "name": "[REDACTED]",
+          "amount": 9.4856,
+          "msg": "",
+          "breakup": [
+            {
+              "name": "[REDACTED]",
+              "amount": 8,
+              "msg": "",
+              "breakup": null
+            },
+            {
+              "name": "[REDACTED]",
+              "amount": 1.4856,
+              "msg": "",
+              "breakup": null
+            }
+          ]
+        }
+      ]
+    },
+    "charges": [
+      {
+        "total_charges": 18.9392,
+        "trade_value": 8000,
+        "breakup": [
+          {
+            "name": "[REDACTED]",
+            "amount": 8,
+            "msg": "",
+            "breakup": []
+          },
+          {
+            "name": "[REDACTED]",
+            "amount": 1.4536,
+            "msg": "",
+            "breakup": [
+              {
+                "name": "[REDACTED]",
+                "amount": 0.2456,
+                "msg": "",
+                "breakup": []
+              },
+              {
+                "name": "[REDACTED]",
+                "amount": 1.2,
+                "msg": "",
+                "breakup": []
+              },
+              {
+                "name": "[REDACTED]",
+                "amount": 0,
+                "msg": "",
+                "breakup": []
+              },
+              {
+                "name": "[REDACTED]",
+                "amount": 0.008,
+                "msg": "",
+                "breakup": []
+              }
+            ]
+          },
+          {
+            "name": "[REDACTED]",
+            "amount": 9.4856,
+            "msg": "",
+            "breakup": [
+              {
+                "name": "[REDACTED]",
+                "amount": 8,
+                "msg": "",
+                "breakup": []
+              },
+              {
+                "name": "[REDACTED]",
+                "amount": 1.4856,
+                "msg": "",
+                "breakup": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

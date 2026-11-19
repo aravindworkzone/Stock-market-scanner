@@ -1,0 +1,28 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "pcr": 0.73,
+      "tradingSymbol": "323NOV2623NOV26FUT"
+    },
+    {
+      "pcr": 0.49,
+      "tradingSymbol": "ABB23NOV26FUT"
+    },
+    {
+      "pcr": 0.6,
+      "tradingSymbol": "ABCAPITAL23NOV26FUT"
+    },
+    {
+      "pcr": 0.46,
+      "tradingSymbol": "ADANIENSOL23NOV26FUT"
+    },
+    {
+      "pcr": 0.57,
+      "tradingSymbol": "ADANIENT23NOV26FUT"
+    },
+    "[TRUNCATED: 223 items total]"
+  ]
+}

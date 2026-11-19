@@ -1,0 +1,355 @@
+{
+  "sampledAtIST": "2026-11-19 11:12",
+  "results": {
+    "getProfile": {
+      "ms": 110,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "object",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "clientcode",
+        "name",
+        "email",
+        "mobileno",
+        "exchanges",
+        "[TRUNCATED: 8 items total]"
+      ]
+    },
+    "getRMS": {
+      "ms": 122,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "object",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "net",
+        "availablecash",
+        "availableintradaypayin",
+        "availablelimitmargin",
+        "collateral",
+        "[TRUNCATED: 14 items total]"
+      ]
+    },
+    "getHolding": {
+      "ms": 152,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(6)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "tradingsymbol",
+        "exchange",
+        "isin",
+        "t1quantity",
+        "realisedquantity",
+        "[TRUNCATED: 17 items total]"
+      ]
+    },
+    "getAllHolding": {
+      "ms": 110,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "object",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "holdings",
+        "totalholding"
+      ]
+    },
+    "getPosition": {
+      "ms": 116,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "null",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": null
+    },
+    "getOrderBook": {
+      "ms": 100,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "null",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": null
+    },
+    "getTradeBook": {
+      "ms": 123,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "null",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": null
+    },
+    "ruleList": {
+      "ms": 325,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(0)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": null
+    },
+    "marketData": {
+      "ms": 111,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "object",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "fetched",
+        "unfetched"
+      ]
+    },
+    "searchScrip": {
+      "ms": 122,
+      "returnedType": "array",
+      "dataType": "undefined",
+      "topKeys": null,
+      "dataKeys": null
+    },
+    "getCandleData": {
+      "ms": 344,
+      "returnedType": "object",
+      "status": 403,
+      "message": "",
+      "dataType": "undefined",
+      "topKeys": [
+        "status",
+        "message"
+      ],
+      "dataKeys": null
+    },
+    "getOIData": {
+      "ms": 364,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(24)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "time",
+        "oi"
+      ]
+    },
+    "estimateCharges": {
+      "ms": 125,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "object",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "summary",
+        "charges"
+      ]
+    },
+    "marginApi": {
+      "ms": 109,
+      "returnedType": "object",
+      "status": 400,
+      "message": "",
+      "dataType": "undefined",
+      "topKeys": [
+        "status",
+        "message"
+      ],
+      "dataKeys": null
+    },
+    "optionGreek": {
+      "ms": 209,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(236)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "name",
+        "expiry",
+        "strikePrice",
+        "optionType",
+        "delta",
+        "[TRUNCATED: 10 items total]"
+      ]
+    },
+    "gainersLosers": {
+      "ms": 115,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(10)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "tradingSymbol",
+        "percentChange",
+        "symbolToken",
+        "ltp",
+        "netChange"
+      ]
+    },
+    "putCallRatio": {
+      "ms": 280,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(223)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "pcr",
+        "tradingSymbol"
+      ]
+    },
+    "nseIntraday": {
+      "ms": 615,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(1878)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "Exchange",
+        "SymbolName",
+        "Multiplier"
+      ]
+    },
+    "bseIntraday": {
+      "ms": 203,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(1802)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "Exchange",
+        "SymbolName",
+        "Multiplier"
+      ]
+    },
+    "oIBuildup": {
+      "ms": 102,
+      "returnedType": "object",
+      "status": true,
+      "message": "SUCCESS",
+      "errorcode": "",
+      "dataType": "array(10)",
+      "topKeys": [
+        "status",
+        "message",
+        "errorcode",
+        "data"
+      ],
+      "dataKeys": [
+        "symbolToken",
+        "ltp",
+        "netChange",
+        "percentChange",
+        "opnInterest",
+        "[TRUNCATED: 7 items total]"
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": {
+    "clientcode": "[REDACTED]",
+    "name": "[REDACTED]",
+    "email": "[REDACTED]",
+    "mobileno": "[REDACTED]",
+    "exchanges": [
+      "nse_cm",
+      "[TRUNCATED: 2 items total]"
+    ],
+    "products": [
+      "MARGIN",
+      "[TRUNCATED: 5 items total]"
+    ],
+    "lastlogintime": "[REDACTED:string]",
+    "broker": "[REDACTED:string]"
+  }
+}

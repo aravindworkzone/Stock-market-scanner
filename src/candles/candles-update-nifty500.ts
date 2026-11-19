@@ -1,21 +1,7 @@
-import { uploadNifty500HistoricalData } from "./candles.service.js";
+// npm run update_candle_nifty_500 [-- --dry-run]
+// Incremental NIFTY 500 update (see run-daily-candle-update.ts).
+import { runDailyCandleUpdateCommand } from "./run-daily-candle-update.js";
 
-async function main(): Promise<void> {
-    try {
-        const result = await uploadNifty500HistoricalData();
-
-        console.log(
-            "NIFTY 500 historical data upload completed:",
-            result
-        );
-    } catch (error: unknown) {
-        console.error(
-            "Error uploading NIFTY 500 historical data:",
-            error
-        );
-
-        process.exitCode = 1;
-    }
-}
-
-main();
+void runDailyCandleUpdateCommand(["--index", "NIFTY 500", ...process.argv.slice(2)]).then((exitCode) => {
+  process.exitCode = exitCode;
+});

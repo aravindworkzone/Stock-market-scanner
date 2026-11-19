@@ -1,12 +1,13 @@
 console.error("[DEBUG] s-market-scanner stdio.ts loaded");
-import path from "node:path";
 import dotenv from "dotenv";
+import { installUnhandledRejectionGuard } from "./core/process-guards.js";
+import { ENV_FILE_PATH } from "./config/paths.js";
 
-dotenv.config({
-  path: path.resolve(
-    "C:\\Users\\77529\\Desktop\\manage\\s-market_scanner\\.env",
-  ),
-});
+// The SDK's unawaited publicIp.v4() lookup must not be able to crash the server.
+installUnhandledRejectionGuard();
+
+// Project-root .env, independent of the cwd the MCP client launches us from.
+dotenv.config({ path: ENV_FILE_PATH, quiet: true });
 
 async function main(): Promise<void> {
   const { StdioServerTransport } = await import(

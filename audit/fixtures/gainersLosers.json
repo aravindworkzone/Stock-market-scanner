@@ -1,0 +1,43 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "tradingSymbol": "VOLTAS23NOV26FUT",
+      "percentChange": 7.21,
+      "symbolToken": 61744,
+      "ltp": 1212.1,
+      "netChange": 81.5
+    },
+    {
+      "tradingSymbol": "MARUTI23NOV26FUT",
+      "percentChange": 6.41,
+      "symbolToken": 61644,
+      "ltp": 13470,
+      "netChange": 811
+    },
+    {
+      "tradingSymbol": "AMBER23NOV26FUT",
+      "percentChange": 6.4,
+      "symbolToken": 61483,
+      "ltp": 6656.5,
+      "netChange": 400.5
+    },
+    {
+      "tradingSymbol": "IREDA23NOV26FUT",
+      "percentChange": 6.35,
+      "symbolToken": 61613,
+      "ltp": 127.46,
+      "netChange": 7.61
+    },
+    {
+      "tradingSymbol": "PGEL23NOV26FUT",
+      "percentChange": 5.76,
+      "symbolToken": 61678,
+      "ltp": 570.45,
+      "netChange": 31.05
+    },
+    "[TRUNCATED: 10 items total]"
+  ]
+}

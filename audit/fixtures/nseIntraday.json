@@ -1,0 +1,33 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "Exchange": "NSE",
+      "SymbolName": "CHEMPLASTS",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "NSE",
+      "SymbolName": "EICHERMOT",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "NSE",
+      "SymbolName": "PSUBNKIETF",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "NSE",
+      "SymbolName": "AONEGOLD",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "NSE",
+      "SymbolName": "MOVALUE",
+      "Multiplier": "5.0"
+    },
+    "[TRUNCATED: 1878 items total]"
+  ]
+}

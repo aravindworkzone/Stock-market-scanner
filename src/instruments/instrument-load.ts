@@ -1,12 +1,11 @@
 import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { InstrumentMasterSchema } from '../util/validator.js';
 import { type InstrumentRecord } from '../types/instruments.js';
 import { AppError } from '../core/errors.js';
+import { resolveInstrumentMasterFile } from '../config/paths.js';
 
-const INSTRUMENT_MASTER_FILE = path.resolve(
-  'C:\\Users\\77529\\Desktop\\manage\\s-market_scanner\\data\\instruments\\OpenAPIScripMaster.json',
-);
+// <DATA_DIR or project root/data>/instruments/OpenAPIScripMaster.json (same file the updater writes).
+const INSTRUMENT_MASTER_FILE = resolveInstrumentMasterFile();
 let instrumentCache: InstrumentRecord[] | null = null;
 
 const loadInstrumentMaster = async (): Promise<InstrumentRecord[]> => {

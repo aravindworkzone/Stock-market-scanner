@@ -3,6 +3,8 @@ import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
 import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
+import { readValidatedCloses } from './candle-validation.js';
+import { assertDailyInterval, indicatorWarmupTradingDays } from './indicator-window.js';
 
 export default async function RSI(
     exchange: string,
@@ -25,7 +27,10 @@ export default async function RSI(
             );
         }
 
-        const candleCount = period + 1;
+        assertDailyInterval(interval);
+
+        // B3: same warm-up window as calculate_all_indicators, so both tools agree.
+        const candleCount = indicatorWarmupTradingDays(period);
 
         if (!Number.isSafeInteger(candleCount)) {
             throw new AppError(
@@ -93,41 +98,7 @@ export function getRSI(Candle: AngelOneCandle[], period: number) {
         );
     }
 
-    const closes = Candle.map((candle) => {
-        if (!Array.isArray(candle) || candle.length < 5) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle structure.'
-            );
-        }
-
-        const close = Number(candle[4]);
-
-        if (!Number.isFinite(close) || close <= 0) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle close price.'
-            );
-        }
-
-        return close;
-    });
-
-    for (let i = 1; i < Candle.length; i++) {
-        const previousTime = new Date(Candle[i - 1][0]).getTime();
-        const currentTime = new Date(Candle[i][0]).getTime();
-
-        if (
-            !Number.isFinite(previousTime) ||
-            !Number.isFinite(currentTime) ||
-            currentTime <= previousTime
-        ) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Candles must be in valid chronological ascending order.'
-            );
-        }
-    }
+    const closes = readValidatedCloses(Candle);
 
     let gains = 0;
     let losses = 0;

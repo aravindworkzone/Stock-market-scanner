@@ -1,0 +1,53 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "symbolToken": "61521",
+      "ltp": "1711.9",
+      "netChange": "84.3",
+      "percentChange": "5.18",
+      "opnInterest": "3220.75",
+      "netChangeOpnInterest": "111.15",
+      "tradingSymbol": "BLUESTARCO23NOV26FUT"
+    },
+    {
+      "symbolToken": "61564",
+      "ltp": "8045.0",
+      "netChange": "352.0",
+      "percentChange": "4.58",
+      "opnInterest": "1801.1",
+      "netChangeOpnInterest": "106.8",
+      "tradingSymbol": "EICHERMOT23NOV26FUT"
+    },
+    {
+      "symbolToken": "61735",
+      "ltp": "4546.0",
+      "netChange": "177.4",
+      "percentChange": "4.06",
+      "opnInterest": "4762.63",
+      "netChangeOpnInterest": "198.8",
+      "tradingSymbol": "TVSMOTOR23NOV26FUT"
+    },
+    {
+      "symbolToken": "61682",
+      "ltp": "154.71",
+      "netChange": "4.57",
+      "percentChange": "3.04",
+      "opnInterest": "165264.0",
+      "netChangeOpnInterest": "8312.0",
+      "tradingSymbol": "PNB23NOV26FUT"
+    },
+    {
+      "symbolToken": "61509",
+      "ltp": "281.76",
+      "netChange": "7.82",
+      "percentChange": "2.85",
+      "opnInterest": "87580.35",
+      "netChangeOpnInterest": "737.1",
+      "tradingSymbol": "BANKBARODA23NOV26FUT"
+    },
+    "[TRUNCATED: 10 items total]"
+  ]
+}

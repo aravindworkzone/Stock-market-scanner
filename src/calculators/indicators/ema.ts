@@ -2,6 +2,8 @@ import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
 import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
+import { readValidatedCloses } from './candle-validation.js';
+import { assertDailyInterval } from './indicator-window.js';
 
 export async function EMA(
     exchange: string,
@@ -17,6 +19,8 @@ export async function EMA(
         if (!Number.isSafeInteger(period) || period <= 0) {
             throw new AppError('VALIDATION_ERROR', 'Period must be a positive safe integer');
         }
+
+        assertDailyInterval(interval);
 
         const EMA_period = period * 5;
 
@@ -66,35 +70,7 @@ export function getEMA(Candle: AngelOneCandle[], period: number) {
         );
     }
 
-    const closes: number[] = Candle.map((c) => {
-        if (!Array.isArray(c) || c.length < 5) {
-            throw new AppError('VALIDATION_ERROR', 'Invalid candle structure');
-        }
-
-        const close = Number(c[4]);
-
-        if (!Number.isFinite(close) || close <= 0) {
-            throw new AppError('VALIDATION_ERROR', 'Invalid candle close price');
-        }
-
-        return close;
-    });
-
-    for (let i = 1; i < Candle.length; i++) {
-        const previousTime = new Date(Candle[i - 1][0]).getTime();
-        const currentTime = new Date(Candle[i][0]).getTime();
-
-        if (
-            !Number.isFinite(previousTime) ||
-            !Number.isFinite(currentTime) ||
-            currentTime <= previousTime
-        ) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Candles must be in valid chronological ascending order'
-            );
-        }
-    }
+    const closes: number[] = readValidatedCloses(Candle);
 
     let ema = closes
         .slice(0, period)

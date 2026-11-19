@@ -6,10 +6,11 @@ import { logger } from '../core/logger.js';
 import { AppError, toAppError } from '../core/errors.js';
 import { InstrumentMasterSchema } from '../util/validator.js';
 import { reloadInstrumentMaster } from './instrument-load.js';
+import { resolveInstrumentMasterFile } from '../config/paths.js';
 
-const DATA_DIRECTORY = path.resolve(process.cwd(), 'data', 'instruments');
+const INSTRUMENT_MASTER_FILE = resolveInstrumentMasterFile();
 
-const INSTRUMENT_MASTER_FILE = path.join(DATA_DIRECTORY, 'OpenAPIScripMaster.json');
+const DATA_DIRECTORY = path.dirname(INSTRUMENT_MASTER_FILE);
 
 const TEMP_INSTRUMENT_MASTER_FILE = `${INSTRUMENT_MASTER_FILE}.tmp`;
 
