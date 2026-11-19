@@ -1,0 +1,21 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": {
+    "net": "[REDACTED:string]",
+    "availablecash": "[REDACTED:string]",
+    "availableintradaypayin": "[REDACTED:string]",
+    "availablelimitmargin": "[REDACTED:string]",
+    "collateral": "[REDACTED:string]",
+    "m2munrealized": "[REDACTED:string]",
+    "m2mrealized": "[REDACTED:string]",
+    "utiliseddebits": "[REDACTED:string]",
+    "utilisedspan": null,
+    "utilisedoptionpremium": null,
+    "utilisedholdingsales": null,
+    "utilisedexposure": null,
+    "utilisedturnover": null,
+    "utilisedpayout": "[REDACTED:string]"
+  }
+}

@@ -2,6 +2,8 @@ import { AppError, toAppError } from '../../core/errors.js';
 import fromToDate from '../../util/fromToDate.js';
 import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
 import { AngelOneCandle } from '../../types/angelone.js';
+import { readValidatedVolumes } from './candle-validation.js';
+import { assertDailyInterval } from './indicator-window.js';
 
 export default async function VolumeAverage(
     exchange: string,
@@ -16,6 +18,8 @@ export default async function VolumeAverage(
                 'Exchange, symbol token and interval are required.'
             );
         }
+
+        assertDailyInterval(interval);
 
         if (!Number.isSafeInteger(period) || period <= 0) {
             throw new AppError(
@@ -95,43 +99,7 @@ export function getVolumeAverage(
         );
     }
 
-    // Validate candle structure and volume
-    const volumes = Candle.map((candle) => {
-        if (!Array.isArray(candle) || candle.length < 6) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle structure.'
-            );
-        }
-
-        const volume = Number(candle[5]);
-
-        if (!Number.isSafeInteger(volume) || volume < 0) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Invalid candle volume.'
-            );
-        }
-
-        return volume;
-    });
-
-    // Validate chronological order
-    for (let i = 1; i < Candle.length; i++) {
-        const previousTime = new Date(Candle[i - 1][0]).getTime();
-        const currentTime = new Date(Candle[i][0]).getTime();
-
-        if (
-            !Number.isFinite(previousTime) ||
-            !Number.isFinite(currentTime) ||
-            currentTime <= previousTime
-        ) {
-            throw new AppError(
-                'VALIDATION_ERROR',
-                'Candles must be in valid chronological ascending order.'
-            );
-        }
-    }
+    const volumes = readValidatedVolumes(Candle);
 
     // Latest volume
     const latestVolume = volumes[volumes.length - 1];

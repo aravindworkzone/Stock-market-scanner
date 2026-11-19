@@ -2,6 +2,8 @@
     import fromToDate from '../../util/fromToDate.js';
     import { getDailyCandles, toAngelOneCandles } from '../../candles/candles.repository.js';
     import { AngelOneCandle } from '../../types/angelone.js';
+import { readValidatedHighLowClose } from './candle-validation.js';
+    import { assertDailyInterval } from './indicator-window.js';
 
     export default async function ATR(
         exchange: string,
@@ -16,6 +18,8 @@
                     'Exchange, symbol token and interval are required.'
                 );
             }
+
+            assertDailyInterval(interval);
 
             if (!Number.isSafeInteger(period) || period <= 0) {
                 throw new AppError(
@@ -95,57 +99,7 @@
             );
         }
 
-        const candles = Candle.map((candle) => {
-            if (!Array.isArray(candle) || candle.length < 5) {
-                throw new AppError(
-                    'VALIDATION_ERROR',
-                    'Invalid candle structure.'
-                );
-            }
-
-            const high = Number(candle[2]);
-            const low = Number(candle[3]);
-            const close = Number(candle[4]);
-
-            if (
-                !Number.isFinite(high) ||
-                !Number.isFinite(low) ||
-                !Number.isFinite(close) ||
-                high <= 0 ||
-                low <= 0 ||
-                close <= 0 ||
-                high < low ||
-                close > high ||
-                close < low
-            ) {
-                throw new AppError(
-                    'VALIDATION_ERROR',
-                    'Invalid candle OHLC values.'
-                );
-            }
-
-            return {
-                high,
-                low,
-                close
-            };
-        });
-
-        for (let i = 1; i < Candle.length; i++) {
-            const previousTime = new Date(Candle[i - 1][0]).getTime();
-            const currentTime = new Date(Candle[i][0]).getTime();
-
-            if (
-                !Number.isFinite(previousTime) ||
-                !Number.isFinite(currentTime) ||
-                currentTime <= previousTime
-            ) {
-                throw new AppError(
-                    'VALIDATION_ERROR',
-                    'Candles must be in valid chronological ascending order.'
-                );
-            }
-        }
+        const candles = readValidatedHighLowClose(Candle);
 
         const trueRanges: number[] = [];
 

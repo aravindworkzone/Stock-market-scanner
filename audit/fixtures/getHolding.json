@@ -1,0 +1,27 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "tradingsymbol": "[REDACTED:string]",
+      "exchange": "[REDACTED:string]",
+      "isin": "[REDACTED:string]",
+      "t1quantity": "[REDACTED:number]",
+      "realisedquantity": "[REDACTED:number]",
+      "quantity": "[REDACTED:number]",
+      "authorisedquantity": "[REDACTED:number]",
+      "product": "[REDACTED:string]",
+      "collateralquantity": null,
+      "collateraltype": null,
+      "haircut": "[REDACTED:number]",
+      "averageprice": "[REDACTED:number]",
+      "ltp": "[REDACTED:number]",
+      "symboltoken": "[REDACTED:string]",
+      "close": "[REDACTED:number]",
+      "profitandloss": "[REDACTED:number]",
+      "pnlpercentage": "[REDACTED:number]"
+    },
+    "[TRUNCATED: 6 items total]"
+  ]
+}

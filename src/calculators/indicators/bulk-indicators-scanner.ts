@@ -1,8 +1,10 @@
 import { CONSTITUENT_CONFIG } from '../../indices/index.config.js';
-import indexStock from '../../indices/index-stock.service.js';
+import { loadIndexStocks, type ConstituentSourceInfo } from '../../indices/index-stock.service.js';
+import type { UnmatchedConstituent } from '../../indices/instrument-matcher.service.js';
 import { AppError, toAppError } from '../../core/errors.js';
 import { logger } from '../../core/logger.js';
 import AllIndicators from './all-indicators.js';
+import { assertDailyInterval } from './indicator-window.js';
 
 export type ScannerIndexName = keyof typeof CONSTITUENT_CONFIG.NSE.indexFiles;
 
@@ -37,6 +39,9 @@ export interface BulkScannerResult {
     failedCount: number;
     results: StockIndicatorResult[];
     failedStocks: FailedStock[];
+    /** Index constituents with no instrument match; not scanned (B10). */
+    unmatchedConstituents: UnmatchedConstituent[];
+    constituentsSource: ConstituentSourceInfo;
 }
 
 export interface StockIndicatorSummary {
@@ -89,7 +94,10 @@ export async function bulkIndicatorScanner(
             throw new AppError('VALIDATION_ERROR', 'Concurrency must be a positive safe integer.');
         }
 
-        const stocks = await indexStock(index);
+        assertDailyInterval(interval);
+
+        const indexStocks = await loadIndexStocks(index);
+        const stocks = indexStocks.matched;
 
         if (stocks.length === 0) {
             throw new AppError('NO_DATA', `No stocks found for index ${index}.`);
@@ -153,7 +161,9 @@ export async function bulkIndicatorScanner(
             successCount: results.length,
             failedCount: failedStocks.length,
             results,
-            failedStocks
+            failedStocks,
+            unmatchedConstituents: indexStocks.unmatched,
+            constituentsSource: indexStocks.constituentsSource
         };
 
     } catch (error) {

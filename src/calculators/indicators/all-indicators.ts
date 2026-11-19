@@ -11,6 +11,12 @@ import { getATR } from './atr.js';
 import { getVolumeAverage } from './volume-average.js';
 import { getWeek52HighLow } from './week-52-high-low.js';
 import { getSupportResistance } from './support-resistance.js';
+import {
+    assertDailyInterval,
+    candlesOnOrAfter,
+    indicatorWarmupTradingDays,
+    week52WindowStartDate,
+} from './indicator-window.js';
 
 export default async function AllIndicators(
     exchange: string,
@@ -23,6 +29,8 @@ export default async function AllIndicators(
             throw new Error('Exchange, symboltoken, interval and valid period are required');
         }
 
+        assertDailyInterval(interval);
+
         const currentDate = new Date().toLocaleDateString('en-CA', {
             timeZone: 'Asia/Kolkata'
         });
@@ -30,7 +38,7 @@ export default async function AllIndicators(
         const { fromdate, todate } = fromToDate(
             currentDate,
             'backward',
-            Math.max(period * 5, 365)
+            indicatorWarmupTradingDays(period)
         );
 
         const response = await getDailyCandles(
@@ -50,28 +58,9 @@ export default async function AllIndicators(
             throw new Error('No historical candles available');
         }
 
-        let dailyCandle: AngelOneCandle[] = Candle;
-
-        if (interval !== 'ONE_DAY') {
-            const dailyDates = fromToDate(
-                currentDate,
-                'backward',
-                365
-            );
-
-            const dailyResponse = await getDailyCandles(
-                exchange,
-                symboltoken,
-                dailyDates.fromdate,
-                dailyDates.todate
-            );
-
-            if (!dailyResponse.status || !Array.isArray(dailyResponse.data)) {
-                throw new Error(dailyResponse.message || 'Unable to fetch daily candles');
-            }
-
-            dailyCandle = toAngelOneCandles(dailyResponse.data);
-        }
+        // B1: the fetch window is >= 365 trading days (~17 months); 52-week high/low must
+        // use only the last 364 calendar days, like get_52_week_high_low.
+        const week52Candles: AngelOneCandle[] = candlesOnOrAfter(Candle, week52WindowStartDate(currentDate));
 
         return {
             symboltoken,
@@ -101,7 +90,7 @@ export default async function AllIndicators(
 
             VolumeAverage: getVolumeAverage(Candle, period),
 
-            Week52HighLow: getWeek52HighLow(dailyCandle),
+            Week52HighLow: getWeek52HighLow(week52Candles),
 
             SupportResistance: getSupportResistance(
                 Candle,

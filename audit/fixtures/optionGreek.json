@@ -1,0 +1,68 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "name": "[REDACTED]",
+      "expiry": "23NOV2026",
+      "strikePrice": "25200.000000",
+      "optionType": "CE",
+      "delta": "0.645900",
+      "gamma": "0.001100",
+      "theta": "-18.647600",
+      "vega": "10.079000",
+      "impliedVolatility": "12.910000",
+      "tradeVolume": "1604103.00"
+    },
+    {
+      "name": "[REDACTED]",
+      "expiry": "23NOV2026",
+      "strikePrice": "25300.000000",
+      "optionType": "CE",
+      "delta": "0.535900",
+      "gamma": "0.001100",
+      "theta": "-18.989500",
+      "vega": "10.766500",
+      "impliedVolatility": "12.760000",
+      "tradeVolume": "1568364.00"
+    },
+    {
+      "name": "[REDACTED]",
+      "expiry": "23NOV2026",
+      "strikePrice": "25250.000000",
+      "optionType": "CE",
+      "delta": "0.591500",
+      "gamma": "0.001100",
+      "theta": "-19.028200",
+      "vega": "10.524600",
+      "impliedVolatility": "12.880000",
+      "tradeVolume": "1048153.00"
+    },
+    {
+      "name": "[REDACTED]",
+      "expiry": "23NOV2026",
+      "strikePrice": "25500.000000",
+      "optionType": "CE",
+      "delta": "0.313300",
+      "gamma": "0.001000",
+      "theta": "-16.119400",
+      "vega": "9.604300",
+      "impliedVolatility": "12.730000",
+      "tradeVolume": "1000225.00"
+    },
+    {
+      "name": "[REDACTED]",
+      "expiry": "23NOV2026",
+      "strikePrice": "25400.000000",
+      "optionType": "CE",
+      "delta": "0.420700",
+      "gamma": "0.001100",
+      "theta": "-18.141700",
+      "vega": "10.595700",
+      "impliedVolatility": "12.730000",
+      "tradeVolume": "924297.00"
+    },
+    "[TRUNCATED: 236 items total]"
+  ]
+}

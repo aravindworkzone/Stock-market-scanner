@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import ServerInfo from "./config/server.config.js";
 import searchInstruments from "./instruments/instrument-search.js";
 import getHistoricalCandles from "./angelone/historical-candles.js";
-import indexStock from "./indices/index-stock.service.js";
+import indexStock, { loadIndexStocks } from "./indices/index-stock.service.js";
 import { SMA } from "./calculators/indicators/sma.js";
 import { EMA } from "./calculators/indicators/ema.js";
 import { getAllHolding, getPosition, getProfile, getRMS, getHolding } from "./angelone/getAngelone.js";
@@ -14,6 +14,9 @@ import Week52HighLow from "./calculators/indicators/week-52-high-low.js";
 import VolumeAverage from "./calculators/indicators/volume-average.js";
 import AllIndicators from "./calculators/indicators/all-indicators.js";
 import { cachedBulkIndicatorScanner, summarizeStock } from "./calculators/indicators/bulk-indicators-scanner.js";
+import { checkCandleFreshness } from "./candles/candle-freshness.js";
+import { getLatestCandleDates } from "./candles/candles.repository.js";
+import { config } from "./config/config.js";
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -68,7 +71,8 @@ export function createMcpServer(): McpServer {
     "get_index_stocks",
     ServerInfo.get_index_stocks,
     async ({ indexName }) => {
-      const result = await indexStock(indexName);
+      const indexStocks = await loadIndexStocks(indexName);
+      const result = indexStocks.matched;
 
       return {
         content: [{
@@ -77,6 +81,10 @@ export function createMcpServer(): McpServer {
             index: indexName,
             totalStocks: result.length,
             stocks: result,
+            // Added fields (B10/T8): unmatched constituents are reported, not dropped silently.
+            unmatchedCount: indexStocks.unmatched.length,
+            unmatchedStocks: indexStocks.unmatched,
+            constituentsSource: indexStocks.constituentsSource,
           }, null, 2),
         }],
       };
@@ -224,10 +232,36 @@ export function createMcpServer(): McpServer {
         nextOffset: nextOffset < scan.results.length ? nextOffset : null,
         stocks: page,
         failedStocks: scan.failedStocks,
+        // Added fields (B10/T8): constituents that could not be matched to an instrument,
+        // and where the constituent list came from (stale when NSE could not be reached).
+        unmatchedConstituents: scan.unmatchedConstituents,
+        constituentsSource: scan.constituentsSource,
       };
 
       return {
         content: [{ type: "text", text: JSON.stringify(result) }],
+      };
+    },
+  );
+
+  server.registerTool(
+    "get_candle_freshness",
+    ServerInfo.get_candle_freshness,
+    async ({ index, staleListLimit }) => {
+      const report = await checkCandleFreshness(
+        {
+          listStocks: () => indexStock(index),
+          getLatestCandleDates: (exchange, symbolTokens) => getLatestCandleDates(exchange, symbolTokens),
+          now: () => new Date(),
+        },
+        {
+          exchange: "NSE",
+          marketCloseBufferMinutes: config.CANDLE_UPDATE_MARKET_CLOSE_BUFFER_MINUTES,
+          staleListLimit,
+        },
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify({ index, ...report }, null, 2) }],
       };
     },
   );

@@ -1,0 +1,28 @@
+[
+  {
+    "exchange": "NSE",
+    "tradingsymbol": "SBIN-AF",
+    "symboltoken": "11128"
+  },
+  {
+    "exchange": "NSE",
+    "tradingsymbol": "SBIN-BE",
+    "symboltoken": "4884"
+  },
+  {
+    "exchange": "NSE",
+    "tradingsymbol": "SBIN-BL",
+    "symboltoken": "12740"
+  },
+  {
+    "exchange": "NSE",
+    "tradingsymbol": "SBIN-EQ",
+    "symboltoken": "3045"
+  },
+  {
+    "exchange": "NSE",
+    "tradingsymbol": "SBIN-IQ",
+    "symboltoken": "28450"
+  },
+  "[TRUNCATED: 16 items total]"
+]

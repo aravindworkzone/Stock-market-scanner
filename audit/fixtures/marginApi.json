@@ -1,0 +1,16 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": {
+    "totalMarginRequired": 1148.8700000000001,
+    "marginComponents": {
+      "netPremium": 0,
+      "spanMargin": 0,
+      "marginBenefit": 0,
+      "deliveryMargin": 0,
+      "nonNFOMargin": 0,
+      "totOptionsPremium": 0
+    }
+  }
+}

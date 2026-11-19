@@ -1,0 +1,33 @@
+{
+  "status": true,
+  "message": "SUCCESS",
+  "errorcode": "",
+  "data": [
+    {
+      "Exchange": "BSE",
+      "SymbolName": "TAALTECH",
+      "Multiplier": "1.0"
+    },
+    {
+      "Exchange": "BSE",
+      "SymbolName": "ARE&M",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "BSE",
+      "SymbolName": "ESCORTS",
+      "Multiplier": "5.0"
+    },
+    {
+      "Exchange": "BSE",
+      "SymbolName": "MIRZAINT",
+      "Multiplier": "1.0"
+    },
+    {
+      "Exchange": "BSE",
+      "SymbolName": "JAYNECOIND",
+      "Multiplier": "5.0"
+    },
+    "[TRUNCATED: 1802 items total]"
+  ]
+}

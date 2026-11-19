@@ -17,6 +17,50 @@ interface DailyCandleRecord {
 
 const BATCH_SIZE = 500;
 
+/** Tagged-template SQL client (Neon in production, a fake in tests). */
+export type SqlClient = (templateStrings: TemplateStringsArray, ...templateValues: unknown[]) => Promise<Record<string, unknown>[]>;
+
+const defaultSqlClient = Neon as unknown as SqlClient;
+
+/** candle_date comes back from Neon as a Date (or a string from fakes); normalise to YYYY-MM-DD in IST. */
+export function normalizeCandleDate(rawDate: unknown): string {
+  return rawDate instanceof Date
+    ? rawDate.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })
+    : String(rawDate).slice(0, 10);
+}
+
+/**
+ * Last stored candle_date per symbol token (tokens with no rows are absent from the map).
+ * Read-only.
+ */
+export async function getLatestCandleDates(
+  exchange: string,
+  symbolTokens: string[],
+  sqlClient: SqlClient = defaultSqlClient,
+): Promise<Map<string, string>> {
+  if (symbolTokens.length === 0) {
+    return new Map();
+  }
+  try {
+    const latestRows = await sqlClient`
+      SELECT symbol_token, MAX(candle_date) AS last_candle_date
+      FROM daily_candles
+      WHERE exchange = ${exchange}
+        AND symbol_token = ANY(${symbolTokens})
+      GROUP BY symbol_token
+    `;
+    return new Map(
+      latestRows.map((latestRow) => [String(latestRow.symbol_token), normalizeCandleDate(latestRow.last_candle_date)]),
+    );
+  } catch (error: unknown) {
+    const databaseError = error as { message?: string; code?: string };
+    throw new AppError(
+      "DATABASE_ERROR",
+      `[DATABASE_ERROR] Failed to read latest candle dates: ${databaseError.message ?? "Unknown error"} | Code: ${databaseError.code ?? "N/A"}`,
+    );
+  }
+}
+
 export async function saveDailyCandles(
   exchange: string,
   symbolToken: string,
@@ -174,11 +218,7 @@ export function toAngelOneCandles(
   rows: Record<string, unknown>[],
 ): AngelOneCandle[] {
   return rows.map((row) => {
-    const rawDate = row.candle_date;
-    const candleDate =
-      rawDate instanceof Date
-        ? rawDate.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })
-        : String(rawDate).slice(0, 10);
+    const candleDate = normalizeCandleDate(row.candle_date);
 
     return [
       `${candleDate}T00:00:00+05:30`,

@@ -1,3 +1,4 @@
+import { installUnhandledRejectionGuard } from "./core/process-guards.js";
 import { createServer, type ServerResponse } from "node:http";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createMcpServer } from "./server.js";
@@ -12,10 +13,13 @@ function sendError(res: ServerResponse, status: number, message: string): void {
   res.end(JSON.stringify({ error: message }));
 }
 
+// The SDK's unawaited publicIp.v4() lookup must not be able to crash the server.
+installUnhandledRejectionGuard();
+
 async function main(): Promise<void> {
   const dbConnected = await checkDatabaseConnection();
 
-  console.log("Supabase connected:", dbConnected);
+  logger.info(`Neon database connected: ${dbConnected}`);
   logger.info(`Starting MCP server in ${config.NODE_ENV}`);
 
   const httpServer = createServer(async (req, res) => {
